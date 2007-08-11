@@ -18,10 +18,7 @@ ReadMode 3;
 END { ReadMode 0 }
 $| = 1;
 # }}}
-sub read_keyboard # {{{
-{
-    ReadKey 0.05;
-} # }}}
+
 sub read_socket # {{{
 {
     # the reason this is so complicated is because packets can be broken up
@@ -60,7 +57,7 @@ sub read_socket # {{{
 
 while (1)
 {
-    if (defined(my $input = read_keyboard()))
+    if (defined(my $input = ReadKey 0.05))
     {
         $input = "E-  Elbereth\n" if $input eq "\ce";
         print $socket $input;
