@@ -12,7 +12,7 @@ $socket->blocking(0);
 # telnet negotiation...
 print {$socket} "\xFF\xFB\x18\xFF\xFA\x18\x0xterm-color\xFF\xF0\xFF\xFC\x20\xFF\xFC\x23\xFF\xFC\x27\xFF\xFE\x3\xFF\xFB\x1\xFF\xFD\x5\xFF\xFB\x21\xFF\xFB\x1F\xFF\xFA\x1F\x0\x50\x0\x18\xFF\xF0";
 # }}}
-# set up character-based input mode {{{
+# set up character-based input mode, autoflush {{{
 ReadMode 3;
 END { ReadMode 0 }
 $| = 1;
@@ -47,11 +47,8 @@ sub read_socket # {{{
             next ITER;
         }
 
-        # cut it and release
-        last ITER;
+        return $from_nao;
     }
-
-    return $from_nao;
 } # }}}
 
 while (1)
