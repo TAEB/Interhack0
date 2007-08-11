@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-package Interhack;
 use IO::Socket::INET;
 use Term::ReadKey;
 
