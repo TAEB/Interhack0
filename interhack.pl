@@ -55,7 +55,7 @@ while (1)
 {
     if (defined(my $input = ReadKey 0.05))
     {
-        $input = "E-  Elbereth\n" if $input eq "\ce";
+        $input = "E-  Elbereth\n" if $input eq "\ce"; # ^E writes Elbereth
         print $socket $input;
     }
 
