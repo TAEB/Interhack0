@@ -3,7 +3,7 @@ use IO::Socket::INET;
 use Term::ReadKey;
 
 # connect to server {{{
-my $socket = new IO::Socket::INET(PeerAddr => 'sporkhack.nineball.org',
+my $socket = new IO::Socket::INET(PeerAddr => 'nethack.alt.org',
                                   PeerPort => 23,
                                   Proto => 'tcp');
 die "Could not create socket: $!\n" unless $socket;
