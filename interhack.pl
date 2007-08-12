@@ -61,7 +61,7 @@ while (1)
 
     if (defined(my $output = read_socket()))
     {
-        $output =~ s/cat/dog/g;
+        $output =~ s/Elbereth/\e[35mElbereth\e[m/g; # color E purple
         print $output;
     }
 }
