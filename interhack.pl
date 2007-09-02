@@ -57,7 +57,7 @@ sub read_socket # {{{
 sub toserver # {{{
 {
     my $text = shift;
-    print $socket $text;
+    print {$socket} $text;
 } # }}}
 sub toscreen # {{{
 {
