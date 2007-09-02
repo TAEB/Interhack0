@@ -27,7 +27,7 @@ sub read_socket # {{{
     # the reason this is so complicated is because packets can be broken up
     # we can't detect this perfectly, but it's only an issue if an escape code
     # is broken into two parts, and we can check for that
-    my $from_nao;
+    my $from_server;
 
     ITER: for (1..100)
     {
@@ -43,7 +43,7 @@ sub read_socket # {{{
         }
 
         # need to store what we read
-        $from_nao .= $_;
+        $from_server .= $_;
 
         # check for broken escape code or DEC string
         if (/ \e \[? [0-9;]* \z /x || m/ \x0e [^\x0f]* \z /x)
@@ -51,7 +51,7 @@ sub read_socket # {{{
             next ITER;
         }
 
-        return $from_nao;
+        return $from_server;
     }
 } # }}}
 sub toserver # {{{
