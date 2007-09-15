@@ -1,11 +1,12 @@
 #!/usr/bin/env perl
-use IO::Socket::INET;
+use IO::Socket::Telnet;
 use Term::ReadKey;
+use Errno 'EAGAIN';
 
 # connect to server {{{
-my $socket = new IO::Socket::INET(PeerAddr => 'nethack.alt.org',
-                                  PeerPort => 23,
-                                  Proto => 'tcp');
+my $socket = new IO::Socket::Telnet(PeerAddr => 'nethack.alt.org',
+                                    PeerPort => 23,
+                                    Proto => 'tcp');
 die "Could not create socket: $!\n" unless $socket;
 $socket->blocking(0);
 
@@ -31,16 +32,11 @@ sub read_socket # {{{
 
     ITER: for (1..100)
     {
-        # would block
-        next ITER
-            unless defined(recv($socket, $_, 4096, 0));
-
-        # 0 = error
-        if (length == 0)
+        defined $socket->recv($_, 4096, 0) or do
         {
-            ReadMode 0;
-            exit;
-        }
+            next ITER if $! == EAGAIN; # would block
+            die $!;
+        };
 
         # need to store what we read
         $from_server .= $_;
