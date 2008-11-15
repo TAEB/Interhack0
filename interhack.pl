@@ -4,14 +4,15 @@ use Term::ReadKey;
 use Errno 'EAGAIN';
 
 # connect to server {{{
-my $socket = new IO::Socket::Telnet(PeerAddr => 'nethack.alt.org',
-                                    PeerPort => 23,
-                                    Proto => 'tcp');
+my $socket = IO::Socket::Telnet->new(
+    PeerAddr => 'nethack.alt.org',
+    Proto    => 'tcp',
+);
 die "Could not create socket: $!\n" unless $socket;
 $socket->blocking(0);
 
 # telnet negotiation...
-print {$socket} "\xFF\xFB\x18\xFF\xFA\x18\x0xterm-color\xFF\xF0\xFF\xFC\x20\xFF\xFC\x23\xFF\xFC\x27\xFF\xFE\x03\xFF\xFB\x01\xFF\xFD\x05\xFF\xFB\x21\xFF\xFB\x1F\xFF\xFA\x1F\x00\x50\x00\x18\xFF\xF0";
+print {$socket} "\xFF\xFB\x18\xFF\xFA\x18\x00xterm-color\xFF\xF0\xFF\xFC\x20\xFF\xFC\x23\xFF\xFC\x27\xFF\xFE\x03\xFF\xFB\x01\xFF\xFD\x05\xFF\xFB\x21\xFF\xFB\x1F\xFF\xFA\x1F\x00\x50\x00\x18\xFF\xF0";
 # }}}
 # set up character-based input mode, autoflush {{{
 ReadMode 3;
@@ -64,16 +65,16 @@ sub toscreen # {{{
 # main loop {{{
 while (1)
 {
-    if (defined(my $input = read_keyboard()))
+    if (defined(my $input = read_keyboard))
     {
         $input = "E-  Elbereth\n" if $input eq "\ce"; # ^E writes Elbereth
-        toserver $input;
+        toserver($input);
     }
 
-    if (defined(my $output = read_socket()))
+    if (defined(my $output = read_socket))
     {
         $output =~ s/Elbereth/\e[35mElbereth\e[m/g; # color E purple
-        toscreen $output;
+        toscreen($output);
     }
 } # }}}
 
