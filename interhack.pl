@@ -20,21 +20,17 @@ END { ReadMode 0 }
 $| = 1;
 # }}}
 
-sub read_keyboard # {{{
-{
+sub read_keyboard { # {{{
     ReadKey 0.05;
 } # }}}
-sub read_socket # {{{
-{
+sub read_socket { # {{{
     # the reason this is so complicated is because packets can be broken up
     # we can't detect this perfectly, but it's only an issue if an escape code
     # is broken into two parts, and we can check for that
     my $from_server;
 
-    ITER: for (1..100)
-    {
-        defined $socket->recv($_, 4096, 0) or do
-        {
+    ITER: for (1..100) {
+        defined $socket->recv($_, 4096, 0) or do {
             next ITER if $! == EAGAIN; # would block
             die $!;
         };
@@ -43,36 +39,30 @@ sub read_socket # {{{
         $from_server .= $_;
 
         # check for broken escape code or DEC string
-        if (/ \e \[? [0-9;]* \z /x || m/ \x0e [^\x0f]* \z /x)
-        {
+        if (/ \e \[? [0-9;]* \z /x || m/ \x0e [^\x0f]* \z /x) {
             next ITER;
         }
 
         return $from_server;
     }
 } # }}}
-sub toserver # {{{
-{
+sub toserver { # {{{
     my $text = shift;
     print {$socket} $text;
 } # }}}
-sub toscreen # {{{
-{
+sub toscreen { # {{{
     my $text = shift;
     print $text;
 } # }}}
 
 # main loop {{{
-while (1)
-{
-    if (defined(my $input = read_keyboard))
-    {
+while (1) {
+    if (defined(my $input = read_keyboard)) {
         $input = "E-  Elbereth\n" if $input eq "\ce"; # ^E writes Elbereth
         toserver($input);
     }
 
-    if (defined(my $output = read_socket))
-    {
+    if (defined(my $output = read_socket)) {
         $output =~ s/Elbereth/\e[35mElbereth\e[m/g; # color E purple
         toscreen($output);
     }
