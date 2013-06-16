@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+use strict;
 use IO::Socket::Telnet;
 use Term::ReadKey;
 use Errno 'EAGAIN';
