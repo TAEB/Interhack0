@@ -46,12 +46,12 @@ sub read_socket {
     }
 }
 
-sub toserver {
+sub to_server {
     my $text = shift;
     print {$socket} $text;
 }
 
-sub toscreen {
+sub to_screen {
     my $text = shift;
     print $text;
 }
@@ -61,12 +61,12 @@ sub toscreen {
 while (1) {
     if (defined(my $input = read_keyboard)) {
         $input = "E-  Elbereth\n" if $input eq "\ce"; # ^E writes Elbereth
-        toserver($input);
+        to_server($input);
     }
 
     if (defined(my $output = read_socket)) {
         $output =~ s/Elbereth/\e[35mElbereth\e[m/g; # color E purple
-        toscreen($output);
+        to_screen($output);
     }
 }
 
