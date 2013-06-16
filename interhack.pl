@@ -4,8 +4,9 @@ use Term::ReadKey;
 use Errno 'EAGAIN';
 
 # connect to server
+my $server = shift || 'nethack.alt.org';
 my $socket = IO::Socket::Telnet->new(
-    PeerAddr => 'nethack.alt.org',
+    PeerAddr => $server,
     Proto    => 'tcp',
 );
 die "Could not create socket: $!\n" unless $socket;
